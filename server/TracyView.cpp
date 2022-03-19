@@ -9822,7 +9822,11 @@ static void DrawHistogramMinMaxLabel( ImDrawList* draw, int64_t tmin, int64_t tm
 
 void View::DrawFindZone()
 {
-    if( m_shortcut == ShortcutAction::OpenFind ) ImGui::SetNextWindowFocus();
+    if( m_shortcut == ShortcutAction::OpenFind )
+    {
+        ImGui::SetNextWindowFocus();
+        m_shortcut = ShortcutAction::None;
+    }
 
     const auto scale = GetScale();
     ImGui::SetNextWindowSize( ImVec2( 520 * scale, 800 * scale ), ImGuiCond_FirstUseEver );
@@ -9843,11 +9847,8 @@ void View::DrawFindZone()
     bool findClicked = false;
 
     ImGui::PushItemWidth( -0.01f );
-    if( m_shortcut == ShortcutAction::OpenFind )
-    {
+    if( ImGui::IsWindowAppearing() )
         ImGui::SetKeyboardFocusHere();
-        m_shortcut = ShortcutAction::None;
-    }
     findClicked |= ImGui::InputTextWithHint( "###findzone", "Enter zone name to search for", m_findZone.pattern, 1024, ImGuiInputTextFlags_EnterReturnsTrue );
     ImGui::PopItemWidth();
 
